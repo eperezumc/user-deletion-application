@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Session Sync</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 12px; width: 300px; color: #231f20; }
+    h1 { font-size: 15px; margin: 0 0 6px; }
+    p { font-size: 12px; color: #555; margin: 0 0 10px; line-height: 1.4; }
+    .group { margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #e8e8e8; }
+    .group:last-of-type { border-bottom: 0; margin-bottom: 0; padding-bottom: 0; }
+    .group h2 { font-size: 12px; margin: 0 0 6px; text-transform: uppercase; letter-spacing: 0.04em; color: #777; }
+    button {
+      display: block;
+      width: 100%;
+      margin: 5px 0;
+      padding: 8px 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: #f7f7f7;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    button:hover { background: #eee; }
+    button.primary { background: #231f20; color: #fff; border-color: #231f20; }
+    button.primary:hover { background: #000; }
+    #status { font-size: 12px; min-height: 2.5em; margin-top: 8px; white-space: pre-wrap; line-height: 1.4; }
+    .ok { color: #0a7a2f; }
+    .err { color: #b00020; }
+    a { font-size: 12px; }
+  </style>
+</head>
+<body>
+  <h1>UMCI Session Sync</h1>
+  <p>Sign in to each platform in your browser, then push the session to the User Disabling Platform server.</p>
+
+  <div class="group">
+    <h2>Stratus</h2>
+    <button type="button" id="open-stratus">1. Open Stratus login</button>
+    <button type="button" id="stratus-prod" class="primary">2. Push Stratus (Production)</button>
+    <button type="button" id="stratus-dev">Push Stratus (Dev)</button>
+  </div>
+
+  <div class="group">
+    <h2>Revizto</h2>
+    <button type="button" id="open-revizto">1. Open Revizto login</button>
+    <button type="button" id="revizto" class="primary">2. Push Revizto</button>
+  </div>
+
+  <div class="group">
+    <h2>Symetri</h2>
+    <button type="button" id="open-symetri">1. Open Symetri login</button>
+    <button type="button" id="symetri" class="primary">2. Push Symetri token</button>
+  </div>
+
+  <div id="status"></div>
+  <p><a href="options.html" target="_blank">Extension settings</a></p>
+  <script src="popup.js"></script>
+</body>
+</html>

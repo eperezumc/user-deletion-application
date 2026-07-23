@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Disabling Platform · UMC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=17">
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <div class="site-header__brand">
+        <img
+          class="site-header__logo"
+          src="{{ url_for('static', filename='umc-logo.png') }}"
+          alt="University Mechanical Contractors"
+          height="34"
+        >
+        <div class="site-header__titles">
+          <p class="site-header__label">Internal Operations</p>
+          <h1 class="site-header__title">User Disabling Platform</h1>
+        </div>
+      </div>
+      <div class="env-toggle" role="group" aria-label="Environment">
+        <button type="button" class="env-toggle__btn is-active" data-environment="dev">Dev Hub</button>
+        <button type="button" class="env-toggle__btn" data-environment="prod">Production</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="shell">
+      <header class="page-intro">
+        <p class="page-intro__eyebrow">Account access</p>
+        <h2 class="page-intro__title">Manage user access</h2>
+        <p class="page-intro__subtitle">
+          Check platform membership, then disable or activate access in separate sections.
+        </p>
+        <ul class="platform-list" aria-label="Integrated platforms">
+          <li class="platform-list__item platform-list__item--acc">Autodesk ACC</li>
+          <li class="platform-list__item platform-list__item--stratus">GTP Stratus</li>
+          <li class="platform-list__item platform-list__item--revizto">Revizto</li>
+          <li class="platform-list__item platform-list__item--trackvia">TrackVia</li>
+          <li class="platform-list__item platform-list__item--openspace">OpenSpace</li>
+          <li class="platform-list__item platform-list__item--symetri">Symetri</li>
+          <li class="platform-list__item platform-list__item--plangrid">PlanGrid</li>
+        </ul>
+      </header>
+
+      <section class="status-panels" aria-label="Platform status">
+        <article class="sync-panel sync-panel--acc">
+          <div class="sync-panel__accent" aria-hidden="true"></div>
+          <div class="sync-panel__info">
+            <span id="env-label" class="sync-panel__env">Autodesk ACC · Dev Hub</span>
+            <span id="sync-status" class="sync-panel__status">Checking local data...</span>
+          </div>
+          <div class="sync-panel__actions">
+            <button type="button" id="sync-btn" class="sync-panel__btn">Sync from Autodesk</button>
+          </div>
+        </article>
+
+        <article class="sync-panel sync-panel--stratus">
+          <div class="sync-panel__accent" aria-hidden="true"></div>
+          <div class="sync-panel__info">
+            <span id="stratus-env-label" class="sync-panel__env">GTP Stratus · Dev</span>
+            <span id="stratus-status" class="sync-panel__status">Checking Stratus connection...</span>
+          </div>
+          <div class="sync-panel__actions">
+            <button type="button" id="stratus-fix-btn" class="sync-panel__btn sync-panel__btn--reconnect" hidden>Fix connection</button>
+            <button type="button" id="stratus-reconnect-btn" class="sync-panel__btn sync-panel__btn--reconnect" hidden>Reconnect</button>
+            <span id="stratus-indicator" class="status-indicator" aria-hidden="true"></span>
+          </div>
+        </article>
+
+        <article class="sync-panel sync-panel--revizto">
+          <div class="sync-panel__accent" aria-hidden="true"></div>
+          <div class="sync-panel__info">
+            <span id="revizto-env-label" class="sync-panel__env">Revizto</span>
+            <span id="revizto-status" class="sync-panel__status">Checking Revizto connection...</span>
+          </div>
+          <div class="sync-panel__actions">
+            <button type="button" id="revizto-fix-btn" class="sync-panel__btn sync-panel__btn--reconnect" hidden>Fix connection</button>
+            <button type="button" id="revizto-reconnect-btn" class="sync-panel__btn sync-panel__btn--reconnect" hidden>Reconnect</button>
+            <span id="revizto-indicator" class="status-indicator" aria-hidden="true"></span>
+          </div>
+        </article>
+
+        <article class="sync-panel sync-panel--trackvia">
+          <div class="sync-panel__accent" aria-hidden="true"></div>
+          <div class="sync-panel__info">
+            <span id="trackvia-env-label" class="sync-panel__env">TrackVia</span>
+            <span id="trackvia-status" class="sync-panel__status">Checking TrackVia connection...</span>
+          </div>
+          <div class="sync-panel__actions">
+            <span id="trackvia-indicator" class="status-indicator" aria-hidden="true"></span>
+          </div>
+        </article>
+
+        <article class="sync-panel sync-panel--openspace">
+          <div class="sync-panel__accent" aria-hidden="true"></div>
+          <div class="sync-panel__info">
+            <span id="openspace-env-label" class="sync-panel__env">OpenSpace</span>
+            <span id="openspace-status" class="sync-panel__status">Checking OpenSpace connection...</span>
+          </div>
+          <div class="sync-panel__actions">
+            <span id="openspace-indicator" class="status-indicator" aria-hidden="true"></span>
+          </div>
+        </article>
+
+        <article class="sync-panel sync-panel--symetri">
+          <div class="sync-panel__accent" aria-hidden="true"></div>
+          <div class="sync-panel__info">
+            <span id="symetri-env-label" class="sync-panel__env">Symetri</span>
+            <span id="symetri-status" class="sync-panel__status">Checking Symetri connection...</span>
+          </div>
+          <div class="sync-panel__actions">
+            <span id="symetri-indicator" class="status-indicator" aria-hidden="true"></span>
+            <button type="button" id="symetri-fix-btn" class="sync-panel__btn sync-panel__btn--reconnect" hidden>Fix connection</button>
+            <button type="button" id="symetri-reconnect-btn" class="sync-panel__btn sync-panel__btn--reconnect" hidden>Reconnect</button>
+          </div>
+        </article>
+
+        <article class="sync-panel sync-panel--plangrid">
+          <div class="sync-panel__accent" aria-hidden="true"></div>
+          <div class="sync-panel__info">
+            <span id="plangrid-env-label" class="sync-panel__env">PlanGrid</span>
+            <span id="plangrid-status" class="sync-panel__status">Checking PlanGrid connection...</span>
+          </div>
+          <div class="sync-panel__actions">
+            <span id="plangrid-indicator" class="status-indicator" aria-hidden="true"></span>
+          </div>
+        </article>
+      </section>
+
+      <section class="platform-lookup-card" aria-labelledby="platform-lookup-title">
+        <div class="platform-lookup-card__header">
+          <div>
+            <h2 id="platform-lookup-title" class="workflow-card__title">Platform membership</h2>
+            <p class="workflow-card__subtitle">
+              Search for a user to see which platforms they are on.
+            </p>
+          </div>
+          <span id="platform-sync-status" class="platform-lookup-card__sync-status">Registry not synced</span>
+        </div>
+        <label for="membership-email">Name or email</label>
+        <div class="search-field">
+          <input
+            type="text"
+            id="membership-email"
+            name="membership_email"
+            placeholder="Search by name or email"
+            autocomplete="off"
+            role="combobox"
+            aria-expanded="false"
+            aria-controls="membership-suggestions"
+          >
+          <ul id="membership-suggestions" class="suggestions" hidden role="listbox"></ul>
+        </div>
+        <div class="platform-lookup-inline__actions">
+          <button type="button" id="platform-lookup-btn" class="btn btn--secondary activate-btn">Look up platforms</button>
+          <button type="button" id="platform-sync-btn" class="sync-panel__btn">Sync all platforms</button>
+        </div>
+        <p id="platform-lookup-empty" class="platform-lookup-empty">
+          No membership loaded yet.
+        </p>
+        <div id="platform-lookup-results" class="platform-lookup-results" hidden>
+          <p id="platform-lookup-summary" class="platform-lookup-summary"></p>
+          <p id="platform-lookup-source" class="platform-lookup-source" hidden></p>
+          <ul id="platform-lookup-list" class="platform-lookup-list" aria-label="Platform membership"></ul>
+        </div>
+        <p id="platform-lookup-message" class="message platform-lookup-message" hidden></p>
+      </section>
+
+      <section class="action-card action-card--danger" aria-labelledby="action-card-title">
+        <h2 id="action-card-title" class="workflow-card__title">Disable or activate</h2>
+        <p class="action-card__subtitle">
+          Enter an email to change access. This is separate from membership lookup.
+        </p>
+        <form id="disable-form">
+          <label for="action-email">Email to change</label>
+          <input
+            type="email"
+            id="action-email"
+            name="action_email"
+            class="action-email-input"
+            placeholder="name@company.com"
+            autocomplete="off"
+            required
+          >
+          <input type="hidden" id="action-user-id" name="action_user_id">
+          <p class="action-target-hint">
+            Disable and activate run against ACC, Stratus, Revizto, and TrackVia. OpenSpace and Symetri remove the user (not reversible from here).
+          </p>
+          <div class="action-buttons">
+            <button type="submit" id="submit-btn" class="btn btn--primary">Disable account</button>
+            <button type="button" id="activate-btn" class="btn btn--secondary activate-btn">Activate account</button>
+          </div>
+        </form>
+        <p id="message" class="message" hidden></p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <img
+      class="site-footer__logo"
+      src="{{ url_for('static', filename='umc-logo.png') }}"
+      alt=""
+      height="28"
+      aria-hidden="true"
+    >
+    <p class="site-footer__text">Internal use only</p>
+  </footer>
+
+  <dialog id="session-fix-dialog" class="session-fix-dialog">
+    <form method="dialog" class="session-fix-dialog__card">
+      <h2 id="session-fix-title">Fix platform connection</h2>
+      <p id="session-fix-intro" class="session-fix-dialog__intro"></p>
+      <ol id="session-fix-steps" class="session-fix-dialog__steps"></ol>
+      <div class="session-fix-dialog__command-wrap">
+        <p class="session-fix-dialog__command-label">Easiest on managed PCs (no extension):</p>
+        <code id="session-fix-command" class="session-fix-dialog__command"></code>
+        <div class="session-fix-dialog__actions session-fix-dialog__actions--inline">
+          <button type="button" id="session-fix-copy" class="sync-panel__btn">Copy command</button>
+          <button type="button" id="session-fix-run-script" class="sync-panel__btn">Open scripts folder</button>
+        </div>
+      </div>
+      <p id="session-fix-extension-status" class="session-fix-dialog__status"></p>
+      <div class="session-fix-dialog__actions">
+        <button type="button" id="session-fix-open-login" class="sync-panel__btn">Open login page</button>
+        <button type="button" id="session-fix-check" class="sync-panel__btn">Check connection</button>
+        <button type="submit" value="close" class="btn btn--secondary activate-btn">Close</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="symetri-reconnect-dialog" class="session-fix-dialog">
+    <form method="dialog" class="session-fix-dialog__card">
+      <h2>Reconnect Symetri</h2>
+      <p class="session-fix-dialog__intro">
+        Symetri bearer tokens expire about every 48 hours. Sign in again or paste a fresh token
+        from DevTools (Network tab on any <code>backend.my.symetri.com</code> request).
+      </p>
+      <div class="session-fix-dialog__actions session-fix-dialog__actions--inline">
+        <button type="button" id="symetri-reconnect-open-login" class="sync-panel__btn">Open my.symetri.com</button>
+        <button type="button" id="symetri-reconnect-auto-btn" class="sync-panel__btn sync-panel__btn--reconnect" hidden>
+          Sign in automatically
+        </button>
+      </div>
+      <label for="symetri-reconnect-token">Bearer token</label>
+      <textarea
+        id="symetri-reconnect-token"
+        class="session-fix-dialog__token-input"
+        rows="4"
+        placeholder="Paste the token from Authorization header (with or without Bearer prefix)"
+        spellcheck="false"
+      ></textarea>
+      <p id="symetri-reconnect-status" class="session-fix-dialog__status"></p>
+      <div class="session-fix-dialog__actions">
+        <button type="button" id="symetri-reconnect-save-btn" class="sync-panel__btn sync-panel__btn--reconnect">Save token</button>
+        <button type="submit" value="close" class="btn btn--secondary activate-btn">Close</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="revizto-reconnect-dialog" class="session-fix-dialog">
+    <form method="dialog" class="session-fix-dialog__card">
+      <h2>Reconnect Revizto</h2>
+      <p class="session-fix-dialog__intro">
+        Revizto API tokens expire. Click <strong>Open API access code page</strong> below
+        (<code>https://ws.revizto.com/login?request=accessCode</code>). Paste the
+        <strong>access code</strong> here — not the refresh code. Codes last 15 minutes and are single-use.
+      </p>
+      <div class="session-fix-dialog__actions session-fix-dialog__actions--inline">
+        <button type="button" id="revizto-reconnect-open-login" class="sync-panel__btn">Open API access code page</button>
+        <button type="button" id="revizto-reconnect-auto-btn" class="sync-panel__btn sync-panel__btn--reconnect">
+          Try automatic sign-in
+        </button>
+      </div>
+      <label for="revizto-reconnect-code">API access code</label>
+      <textarea
+        id="revizto-reconnect-code"
+        class="session-fix-dialog__token-input"
+        rows="3"
+        placeholder="Paste the access code from login?request=accessCode"
+        spellcheck="false"
+      ></textarea>
+      <p id="revizto-reconnect-status" class="session-fix-dialog__status"></p>
+      <div class="session-fix-dialog__actions">
+        <button type="button" id="revizto-reconnect-save-btn" class="sync-panel__btn sync-panel__btn--reconnect">Connect</button>
+        <button type="submit" value="close" class="btn btn--secondary activate-btn">Close</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="{{ url_for('static', filename='app.js') }}?v=49"></script>
+</body>
+</html>

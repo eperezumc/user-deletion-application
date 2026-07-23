@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "UMCI Session Sync",
+  "version": "1.2.0",
+  "description": "Push Stratus, Revizto, and Symetri sign-in sessions to the User Disabling Platform server.",
+  "permissions": ["cookies", "storage", "tabs", "scripting"],
+  "host_permissions": [
+    "https://www.gtpstratus.com/*",
+    "https://ws.revizto.com/*",
+    "https://*.revizto.com/*",
+    "https://my.symetri.com/*",
+    "https://backend.my.symetri.com/*",
+    "http://*/*",
+    "https://*/*"
+  ],
+  "action": {
+    "default_title": "UMCI Session Sync",
+    "default_popup": "popup.html"
+  },
+  "options_page": "options.html",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["content-script.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://my.symetri.com/*"],
+      "js": ["symetri-content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

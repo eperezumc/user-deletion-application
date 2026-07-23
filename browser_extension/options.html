@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Session Sync Settings</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 24px; max-width: 560px; color: #231f20; }
+    label { display: block; margin: 12px 0 4px; font-weight: 600; }
+    input { width: 100%; padding: 8px; box-sizing: border-box; }
+    button { margin-top: 16px; margin-right: 8px; padding: 8px 14px; }
+    #saved { color: #0a7a2f; margin-top: 10px; }
+    #status { margin-top: 12px; font-size: 14px; }
+    .ok { color: #0a7a2f; }
+    .err { color: #b00020; }
+    .hint { font-size: 13px; color: #555; line-height: 1.5; }
+    code { background: #f4f4f4; padding: 1px 4px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <h1>Session Sync Settings</h1>
+  <p class="hint">
+    Point the extension at your User Disabling Platform server.
+    The admin key must match <code>SESSION_ADMIN_KEY</code> in the server <code>.env</code> file.
+  </p>
+  <label for="serverUrl">App server URL</label>
+  <input id="serverUrl" type="url" placeholder="http://192.168.1.50:5000">
+  <label for="adminKey">SESSION_ADMIN_KEY</label>
+  <input id="adminKey" type="password" placeholder="Paste from server .env">
+  <button type="button" id="save">Save</button>
+  <button type="button" id="test">Test connection</button>
+  <div id="saved"></div>
+  <div id="status"></div>
+  <script src="options.js"></script>
+</body>
+</html>

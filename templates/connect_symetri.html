@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reconnect Symetri</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=15">
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: #f4f4f4;
+      color: #231f20;
+      font-family: system-ui, sans-serif;
+    }
+    .connect-card {
+      width: min(520px, calc(100vw - 2rem));
+      background: #fff;
+      border: 1px solid #e4e4e4;
+      border-radius: 14px;
+      padding: 1.5rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+    }
+    .connect-card h1 {
+      margin: 0 0 0.5rem;
+      font-size: 1.35rem;
+    }
+    .connect-card p {
+      margin: 0 0 1rem;
+      line-height: 1.5;
+      color: #555;
+    }
+    .connect-card__status {
+      min-height: 1.5rem;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+    .connect-card__status.is-error { color: #b00020; }
+    .connect-card__status.is-ok { color: #0a7a2f; }
+    .connect-card__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+  </style>
+</head>
+<body>
+  <main class="connect-card">
+    <h1>Reconnect Symetri</h1>
+    <p id="connect-intro">
+      A browser window will open to my.symetri.com. Sign in with your license admin account.
+      This page updates automatically when the token is saved on the server.
+    </p>
+    <p id="connect-status" class="connect-card__status">Starting reconnect...</p>
+    <div class="connect-card__actions">
+      <a href="/" class="sync-panel__btn">Back to app</a>
+      <button type="button" id="connect-retry-btn" class="sync-panel__btn sync-panel__btn--reconnect" hidden>Try again</button>
+      <button type="button" id="connect-manual-btn" class="sync-panel__btn" hidden>Enter token manually</button>
+    </div>
+  </main>
+  <script>
+    const statusEl = document.getElementById("connect-status");
+    const retryBtn = document.getElementById("connect-retry-btn");
+    const manualBtn = document.getElementById("connect-manual-btn");
+    const returnUrl = new URLSearchParams(window.location.search).get("return") || "/";
+    let pollTimer = null;
+
+    function setStatus(text, kind) {
+      statusEl.textContent = text;
+      statusEl.classList.remove("is-error", "is-ok");
+      if (kind) {
+        statusEl.classList.add(kind);
+      }
+    }
+
+    function stopPolling() {
+      if (pollTimer) {
+        clearInterval(pollTimer);
+        pollTimer = null;
+      }
+    }
+
+    async function pollJob(jobId) {
+      const response = await fetch(`/api/session/reconnect/status?job_id=${encodeURIComponent(jobId)}`);
+      const job = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(job.error || "Could not check reconnect status.");
+      }
+      if (job.status === "running") {
+        setStatus(job.message || "Waiting for sign-in...");
+        return;
+      }
+      stopPolling();
+      if (job.status === "success") {
+        setStatus(job.message || "Symetri connected. Returning to the app...", "is-ok");
+        window.setTimeout(() => {
+          window.location.href = returnUrl;
+        }, 1200);
+        return;
+      }
+      setStatus(job.message || "Reconnect failed.", "is-error");
+      retryBtn.hidden = false;
+      manualBtn.hidden = false;
+    }
+
+    async function startReconnect() {
+      retryBtn.hidden = true;
+      manualBtn.hidden = true;
+      setStatus("Opening my.symetri.com in a browser window...");
+      const response = await fetch("/api/session/reconnect", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ platform: "symetri" }),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        setStatus(data.error || "Could not start reconnect.", "is-error");
+        retryBtn.hidden = false;
+        manualBtn.hidden = false;
+        return;
+      }
+      setStatus(data.message || "Sign in when the browser opens.");
+      stopPolling();
+      pollTimer = window.setInterval(() => {
+        pollJob(data.job_id).catch((error) => {
+          stopPolling();
+          setStatus(error.message || "Reconnect failed.", "is-error");
+          retryBtn.hidden = false;
+          manualBtn.hidden = false;
+        });
+      }, 2000);
+    }
+
+    retryBtn.addEventListener("click", () => startReconnect());
+    manualBtn.addEventListener("click", () => {
+      window.location.href = `${returnUrl}${returnUrl.includes("?") ? "&" : "?"}symetri_manual=1`;
+    });
+    startReconnect();
+  </script>
+</body>
+</html>

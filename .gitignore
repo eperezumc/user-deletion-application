@@ -1,0 +1,35 @@
+# Secrets — never commit
+.env
+.env.local
+.env.*.local
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# Local databases & runtime state
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+.revizto_refresh.lock
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*~
+
+# Logs / temp
+*.log
+*.tmp
+tmp/
+temp/
