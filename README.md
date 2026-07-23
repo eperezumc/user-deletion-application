@@ -4,6 +4,8 @@ Internal IT tool: search a user and disable them across connected services (ACC,
 
 **How we use it:** there is no shared server deploy. Each person clones this repo, puts a `.env` on their PC, and runs the app locally.
 
+**Using the app day to day?** See **[USER_GUIDE.md](USER_GUIDE.md)** (start, lookup, disable/activate, reconnect).
+
 ---
 
 ## Part A — You (first time on GitHub)
